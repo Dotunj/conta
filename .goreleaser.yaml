@@ -14,14 +14,17 @@ builds:
     goarch:
       - amd64
       - arm64
+    # hooks: 
+    #   pre:
+    #    - cmd: make ui_build
 
 # https://goreleaser.com/customization/archive/
 archives:
-  - name_template: "convoy_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+  - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     replacements:
       amd64: x86_64
 
-project_name: convoy
+project_name: conta
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
@@ -42,20 +45,20 @@ publishers:
      ids:
       - packages
      dir: "{{ dir .ArtifactPath }}" 
-     cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/convoy/
+     cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/conta/
 
 # https://goreleaser.com/customization/homebrew/
 brews:
-  - name: convoy
+  - name: conta
     homepage: "https://getconvoy.io/"
     description: "A Cloud native webhook service"
     license: "Mozilla Public License 2.0"
     skip_upload: auto
     commit_author:
-      name: frain-dev
-      email: dev@frain.dev
+      name: dotunj
+      email: dotunjolaosho@gmail.com
     tap:
-      owner: frain-dev
+      owner: dotunj
       name: homebrew-tools
 
 checksum:

@@ -10,6 +10,8 @@ on:
     tags:
       # Release binary for every tag.
       - v0.*
+      
+permissions: read-all|write-all
 
 jobs:
   build_ui:
@@ -31,7 +33,6 @@ jobs:
     name: Release Go Binary
     needs: build_ui
     runs-on: ubuntu-latest
-    permissions: read-all|write-all
     strategy:
       matrix:
         goos: [linux, darwin]

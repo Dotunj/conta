@@ -30,10 +30,6 @@ jobs:
     name: Release Go Binary
     needs: build_ui
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux, darwin]
-        goarch: ["amd64", "arm64"]
     steps:
       - uses: actions/checkout@v2
       - name: Download Build Artifact

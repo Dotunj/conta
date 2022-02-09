@@ -1,5 +1,7 @@
 # This is an example .goreleaser.yml file with some sensible defaults.
 # Make sure to check the documentation at https://goreleaser.com
+project_name: conta
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -14,31 +16,24 @@ builds:
     goarch:
       - amd64
       - arm64
-    # hooks: 
-    #   pre:
-    #    - cmd: make ui_build
-
 # https://goreleaser.com/customization/archive/
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     replacements:
       amd64: x86_64
 
-project_name: conta
-
 # https://goreleaser.com/customization/nfpm/
 nfpms:
-  - license: "MPL-2.0"
+  - license: MPL-2.0
     id: packages
     maintainer: "frain-dev"
-    homepage: "https://getconvoy.io/"
-    description: "A Cloud native webhook service"
+    homepage: https://getconvoy.io/
+    description: A Cloud native webhook service
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     formats:
       - apk
       - rpm
       - deb
-
 # https://goreleaser.com/customization/publishers/
 publishers:
    - name: fury.io
@@ -50,9 +45,9 @@ publishers:
 # https://goreleaser.com/customization/homebrew/
 brews:
   - name: conta
-    homepage: "https://getconvoy.io/"
-    description: "A Cloud native webhook service"
-    license: "MPL-2.0"
+    homepage: https://getconvoy.io/
+    description: A Cloud native webhook service
+    license: MPL-2.0
     skip_upload: auto
     commit_author:
       name: dotunj

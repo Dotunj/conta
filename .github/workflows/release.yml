@@ -31,6 +31,7 @@ jobs:
     name: Release Go Binary
     needs: build_ui
     runs-on: ubuntu-latest
+    permissions: read-all|write-all
     strategy:
       matrix:
         goos: [linux, darwin]
@@ -42,13 +43,16 @@ jobs:
         with:
           name: dist-without-markdown
           path: server/ui/build
-
-      - uses: wangyoucao577/go-release-action@v1.19
+          fetch-depth: 0
+      - uses: actions/setup-go@v2
+        name: Setup go
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          goos: ${{ matrix.goos }}
-          goarch: ${{ matrix.goarch }}
-          goversion: "1.17"
-          project_path: "./cmd"
-          binary_name: "convoy"
-          extra_files: LICENSE README.md
+          go-version: 1.17
+      - uses: gorelease/goreleaser-action@v2
+        name: Release
+        with:
+          version: latest
+          args: -f .goreleaser.yaml release --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FURY_TOKEN: ${{ secrets.FURY_TOKEN }}

@@ -28,7 +28,7 @@ project_name: conta
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
-  - license: "Mozilla Public License 2.0"
+  - license: "MPL-2.0"
     id: packages
     maintainer: "frain-dev"
     homepage: "https://getconvoy.io/"
@@ -52,7 +52,7 @@ brews:
   - name: conta
     homepage: "https://getconvoy.io/"
     description: "A Cloud native webhook service"
-    license: "Mozilla Public License 2.0"
+    license: "MPL-2.0"
     skip_upload: auto
     commit_author:
       name: dotunj

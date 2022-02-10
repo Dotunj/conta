@@ -2,6 +2,9 @@
 # Make sure to check the documentation at https://goreleaser.com
 project_name: conta
 
+release:
+  disable: true
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -19,8 +22,6 @@ builds:
 # https://goreleaser.com/customization/archive/
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    replacements:
-      amd64: x86_64
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:

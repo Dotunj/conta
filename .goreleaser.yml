@@ -2,9 +2,7 @@
 # Make sure to check the documentation at https://goreleaser.com
 project_name: conta
 
-release:
-  disable: true
-
+# Check https://goreleaser.com/customization/hooks/
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -19,43 +17,31 @@ builds:
     goarch:
       - amd64
       - arm64
+      
 # https://goreleaser.com/customization/archive/
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
-  - license: MPL-2.0
-    id: packages
+  - id: debrpm
+    license: MPL-2.0
+    maintainer: "frain-dev"
+    homepage: https://getconvoy.io/
+    description: A Cloud native webhook service
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats:
+      - rpm
+      - deb
+
+  - id: apk
+    license: MPL-2.0
     maintainer: "frain-dev"
     homepage: https://getconvoy.io/
     description: A Cloud native webhook service
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     formats:
       - apk
-      - rpm
-      - deb
-# https://goreleaser.com/customization/publishers/
-publishers:
-   - name: fury.io
-     ids:
-      - packages
-     dir: "{{ dir .ArtifactPath }}" 
-     cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/conta/
-
-# https://goreleaser.com/customization/homebrew/
-brews:
-  - name: conta
-    homepage: https://getconvoy.io/
-    description: A Cloud native webhook service
-    license: MPL-2.0
-    skip_upload: auto
-    commit_author:
-      name: dotunj
-      email: dotunjolaosho@gmail.com
-    tap:
-      owner: dotunj
-      name: homebrew-tools
 
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"

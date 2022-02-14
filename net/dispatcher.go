@@ -104,7 +104,7 @@ func updateDispatchHeaders(r *Response, res *http.Response) {
 }
 
 func defaultUserAgent() string {
-	f, err := os.ReadFile("VERSION")
+	f, err := os.ReadFile("./cmd/VERSION")
 	if err != nil {
 		return "Convoy/v0.1.0"
 	}

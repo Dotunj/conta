@@ -1,6 +1,6 @@
 # Set version
 tag=$1
-: > ./VERSION && echo $tag >  VERSION
+: > ./cmd/VERSION && echo $tag >  ./cmd/VERSION
 
 # Commit version number & push
 git add VERSION

@@ -1,9 +1,9 @@
 # Set version
 tag=$1
-: > ./cmd/VERSION && echo $tag >  ./cmd/VERSION
+: > ./VERSION && echo $tag >  VERSION
 
 # Commit version number & push
-git add ./cmd/VERSION
+git add VERSION
 git commit -m "Bump version to $tag"
 git push origin
 

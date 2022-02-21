@@ -11,6 +11,7 @@ builds:
   - env:
       - CGO_ENABLED=0
     main: ./cmd
+    id: mybuild
     goos:
       - linux
       - darwin
@@ -64,6 +65,24 @@ brews:
     tap:
       owner: dotunj
       name: homebrew-tools
+
+dockers: 
+- image_templates:
+   - "ghcr.io/{{ .ProjectName }}:{{ .Tag }}"
+  goos: linux
+  goarch: amd64
+  dockerfile: build.Dockerfile
+  ids: 
+    - mybuild
+  build_flag_templates:
+  - --platform=linux/amd64
+  - --label=org.opencontainers.image.title={{ .ProjectName }}
+  - --label=org.opencontainers.image.description=A Cloud native webhook service
+  - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}
+  - --label=org.opencontainers.image.source=https://github.com/dotunj/{{ .ProjectName }}
+  - --label=org.opencontainers.image.version={{ .Version }}
+  - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+  - --label=org.opencontainers.image.licenses=MPL-2.0
 
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"

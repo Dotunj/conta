@@ -18,7 +18,7 @@ builds:
     goarch:
       - amd64
       - arm64
-      
+
 # https://goreleaser.com/customization/archive/
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
@@ -44,25 +44,44 @@ nfpms:
     formats:
       - apk
 
-dockers: 
-- image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
-  goos: linux
-  goarch: amd64
-  dockerfile: build.Dockerfile
-  ids: 
-    - mybuild
-  build_flag_templates:
-  - --platform=linux/amd64
-  - --label=org.opencontainers.image.title={{ .ProjectName }}
-  - --label=org.opencontainers.image.description=A Cloud native webhook service
-  - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}
-  - --label=org.opencontainers.image.source=https://github.com/dotunj/{{ .ProjectName }}
-  - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
-  - --label=org.opencontainers.image.licenses=MPL-2.0
-
+dockers:
+  - image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
+    goos: linux
+    goarch: amd64
+    dockerfile: build.Dockerfile
+    ids:
+      - mybuild
+    build_flag_templates:
+      - --platform=linux/amd64
+      - --label=org.opencontainers.image.title={{ .ProjectName }}
+      - --label=org.opencontainers.image.description=A Cloud native webhook service
+      - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}
+      - --label=org.opencontainers.image.source=https://github.com/dotunj/{{ .ProjectName }}
+      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+      - --label=org.opencontainers.image.licenses=MPL-2.0
 
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"
 
 signs:
-  - artifacts: checksum
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+    artifacts: checksum
+    output: true
+
+docker_signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    artifacts: images
+    output: true
+    args: 
+      - sign
+      - "${artifact}"

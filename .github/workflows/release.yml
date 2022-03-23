@@ -59,7 +59,6 @@ jobs:
 
       - uses: sigstore/cosign-installer@main
         name: Install cosign
-      - run: cosign version
         with: 
            cosign-release: 'v1.6.0'
 

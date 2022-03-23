@@ -84,4 +84,5 @@ docker_signs:
     output: true
     args: 
       - sign
+      - "--force"
       - "${artifact}"

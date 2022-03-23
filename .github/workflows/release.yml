@@ -59,7 +59,7 @@ jobs:
 
       - uses: sigstore/cosign-installer@v1.4.1
         name: Install cosign
-        run: cosign version
+      - run: cosign version
 
       - uses: docker/login-action@v1
         name: Authenticate with Docker

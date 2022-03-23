@@ -1,9 +1,11 @@
 name: Build docker image
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Manual workflow name"
+        required: true
 
 jobs:
   deploy:

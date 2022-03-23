@@ -106,3 +106,4 @@ docker_signs:
     output: true
     args: 
       - sign
+      - "${artifact}"

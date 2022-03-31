@@ -65,6 +65,7 @@ brews:
     tap:
       owner: dotunj
       name: homebrew-tools
+    url_template: https://dotunj.gateway.scarf.sh/releases/{{.Tag }}/{{ .ArtifactName }}
 
 dockers: 
 - image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]

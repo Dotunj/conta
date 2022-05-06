@@ -73,7 +73,8 @@ brews:
     url_template: https://dl.cloudsmith.io/public/convoy/convoy/raw/versions/{{.Version}}/{{.Tag }}/{{ .ArtifactName }}
 
 dockers: 
-- image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
+- 
+  image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
   id: convoy-image
   goos: linux
   goarch: amd64

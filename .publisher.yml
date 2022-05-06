@@ -74,7 +74,7 @@ brews:
 
 dockers: 
 - image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
-  id: docker-image
+  id: convoy-image
   goos: linux
   goarch: amd64
   dockerfile: build.Dockerfile
@@ -91,37 +91,37 @@ dockers:
   - --label=org.opencontainers.image.licenses=MPL-2.0
 
 publishers:
-  - name: cloudsmith-raw
-    ids: 
-    - mybuild-archive
-    dir: "{{ dir .ArtifactPath }}"
-    cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
-    env: 
-     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+  # - name: cloudsmith-raw
+  #   ids: 
+  #   - mybuild-archive
+  #   dir: "{{ dir .ArtifactPath }}"
+  #   cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
+  #   env: 
+  #    - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
 
-  - name: cloudsmith-deb
-    ids: 
-    - deb
-    dir: "{{ dir .ArtifactPath }}"
-    cmd: cloudsmith push deb convoy/convoy/any-distro/any-version {{ .ArtifactName }}
-    env: 
-      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+  # - name: cloudsmith-deb
+  #   ids: 
+  #   - deb
+  #   dir: "{{ dir .ArtifactPath }}"
+  #   cmd: cloudsmith push deb convoy/convoy/any-distro/any-version {{ .ArtifactName }}
+  #   env: 
+  #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
 
-  - name: cloudsmith-rpm
-    ids: 
-    - rpm
-    dir: "{{ dir .ArtifactPath }}"
-    cmd: cloudsmith push rpm convoy/convoy/any-distro/any-version {{ .ArtifactName }}
-    env: 
-      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+  # - name: cloudsmith-rpm
+  #   ids: 
+  #   - rpm
+  #   dir: "{{ dir .ArtifactPath }}"
+  #   cmd: cloudsmith push rpm convoy/convoy/any-distro/any-version {{ .ArtifactName }}
+  #   env: 
+  #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
     
   - name: cloudsmith-docker
     ids: 
-    - docker-image
-    dir: "{{ dir .ArtifactPath }}"
+    - convoy-image
+    # dir: "{{ dir .ArtifactPath }}"
     cmd: |
      docker save {{ .ArtifactName }} -o conta.docker
-     cloudsmith push docker convoy/convoy conta.docker
+    #  cloudsmith push docker convoy/convoy conta.docker
     env: 
       - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }} 
 

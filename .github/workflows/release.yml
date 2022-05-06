@@ -74,6 +74,15 @@ jobs:
         with:
           go-version: 1.17
 
+      - uses: actions/setup-python@v3
+        name: Setup Python and Cloudsmith CLI
+        with:
+          python-version: '3.9'
+        run: |
+         pip --version
+         pip install --upgrade cloudsmith-cli
+         echo $(cloudsmith --version)
+         
       - uses: goreleaser/goreleaser-action@v2
         name: Release & Upload
         if: needs.analyze-tags.outputs.publish == 'false' # action coerces booleans as strings
@@ -83,6 +92,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
 
       - uses: goreleaser/goreleaser-action@v2
         name: Release, Upload & Publish
@@ -94,3 +104,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           FURY_TOKEN: ${{ secrets.FURY_TOKEN }}
           REPO_NAME: ${{ github.repository }}
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}

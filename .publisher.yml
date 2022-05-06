@@ -18,6 +18,9 @@ builds:
     goarch:
       - amd64
       - arm64
+
+  - id: libbuild
+    skip: true
       
 # https://goreleaser.com/customization/archive/
 archives:
@@ -25,7 +28,16 @@ archives:
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
-  - id: debrpm
+  - id: deb
+    license: MPL-2.0
+    maintainer: "frain-dev"
+    homepage: https://getconvoy.io/
+    description: A Cloud native webhook service
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    formats:
+      - deb
+
+  - id: rpm
     license: MPL-2.0
     maintainer: "frain-dev"
     homepage: https://getconvoy.io/
@@ -33,24 +45,14 @@ nfpms:
     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     formats:
       - rpm
-      - deb
 
-  - id: apk
-    license: MPL-2.0
-    maintainer: "frain-dev"
-    homepage: https://getconvoy.io/
-    description: A Cloud native webhook service
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    formats:
-      - apk
-
-# https://goreleaser.com/customization/publishers/
-publishers:
-   - name: fury.io
-     ids:
-      - debrpm
-     dir: "{{ dir .ArtifactPath }}" 
-     cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/conta/
+# # https://goreleaser.com/customization/publishers/
+# publishers:
+#    - name: fury.io
+#      ids:
+#       - debrpm
+#      dir: "{{ dir .ArtifactPath }}" 
+#      cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/conta/
 
 # https://goreleaser.com/customization/homebrew/
 brews:
@@ -65,13 +67,15 @@ brews:
     tap:
       owner: dotunj
       name: homebrew-tools
-    url_template: https://dotunj.gateway.scarf.sh/releases/{{.Tag }}/{{ .ArtifactName }}
+    url_template: https://dl.cloudsmith.io/public/convoy/convoy/raw/versions/{{.Version}}/{{.Tag }}/{{ .ArtifactName }}
 
 dockers: 
 - image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
+  id: coimage
   goos: linux
   goarch: amd64
   dockerfile: build.Dockerfile
+  skip_push: true
   ids: 
     - mybuild
   build_flag_templates:
@@ -83,8 +87,47 @@ dockers:
   - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
   - --label=org.opencontainers.image.licenses=MPL-2.0
 
+publishers:
+  - name: cloudsmith-raw
+    ids: 
+    - mybuild
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
+    env: 
+     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+
+  - name: cloudsmith-deb
+    ids: 
+    - deb
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push deb convoy/convoy {{ .ArtifactName }}
+    env: 
+      - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }}
+
+  - name: cloudsmith-rpm
+    ids: 
+    - rpm
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push rpm convoy/convoy {{ .ArtifactName }}
+    env: 
+      - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }}
+    
+  - name: cloudsmith-docker
+    ids: 
+    - coimage
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: |
+     docker save {{ .ArtifactName }} -o conta.docker
+     cloudsmith push docker convoy/convoy conta.docker
+    env: 
+      - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }} 
+
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"
+
+release:
+  ids:
+    - libbuild
 
 signs:
   - cmd: cosign

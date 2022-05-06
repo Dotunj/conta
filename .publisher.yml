@@ -25,6 +25,9 @@ builds:
 # https://goreleaser.com/customization/archive/
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    id: mybuild-archive
+    builds:
+     - mybuild
 
 # https://goreleaser.com/customization/nfpm/
 nfpms:
@@ -90,7 +93,7 @@ dockers:
 publishers:
   - name: cloudsmith-raw
     ids: 
-    - mybuild
+    - mybuild-archive
     dir: "{{ dir .ArtifactPath }}"
     cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
     env: 

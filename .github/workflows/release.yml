@@ -101,7 +101,7 @@ jobs:
         if: needs.analyze-tags.outputs.publish == 'true'
         with:
           version: latest
-          args: -f .publisher.yml release --rm-dist
+          args: -f .publisher.yml release --rm-dist --debug
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           FURY_TOKEN: ${{ secrets.FURY_TOKEN }}

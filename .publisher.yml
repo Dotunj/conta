@@ -74,7 +74,7 @@ brews:
 
 dockers: 
 - image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
-  id: coimage
+  id: docker-image
   goos: linux
   goarch: amd64
   dockerfile: build.Dockerfile
@@ -117,7 +117,7 @@ publishers:
     
   - name: cloudsmith-docker
     ids: 
-    - coimage
+    - docker-image
     dir: "{{ dir .ArtifactPath }}"
     cmd: |
      docker save {{ .ArtifactName }} -o conta.docker

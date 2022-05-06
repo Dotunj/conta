@@ -81,7 +81,7 @@ jobs:
 
       - name: Install Cloudsmith CLI
         run: |
-         pip --version
+         echo $(pip --version)
          pip install --upgrade cloudsmith-cli
          echo $(cloudsmith --version)
          

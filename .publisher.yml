@@ -117,12 +117,9 @@ publishers:
   #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
     
   - name: cloudsmith-docker
-    ids: 
-    - convoy-image
-    # dir: "{{ dir .ArtifactPath }}"
     cmd: |
-     docker save {{ .ArtifactName }} -o conta.docker
-    #  cloudsmith push docker convoy/convoy conta.docker
+     docker save ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }} -o conta.docker
+     cloudsmith push docker convoy/convoy conta.docker
     env: 
       - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }} 
 

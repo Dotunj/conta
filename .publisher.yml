@@ -100,7 +100,7 @@ publishers:
     ids: 
     - deb
     dir: "{{ dir .ArtifactPath }}"
-    cmd: cloudsmith push deb convoy/convoy {{ .ArtifactName }}
+    cmd: cloudsmith push deb convoy/convoy/any-distro/any-version {{ .ArtifactName }}
     env: 
       - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }}
 
@@ -108,7 +108,7 @@ publishers:
     ids: 
     - rpm
     dir: "{{ dir .ArtifactPath }}"
-    cmd: cloudsmith push rpm convoy/convoy {{ .ArtifactName }}
+    cmd: cloudsmith push rpm convoy/convoy/any-distro/any-version {{ .ArtifactName }}
     env: 
       - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }}
     

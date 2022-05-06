@@ -102,7 +102,7 @@ publishers:
     dir: "{{ dir .ArtifactPath }}"
     cmd: cloudsmith push deb convoy/convoy/any-distro/any-version {{ .ArtifactName }}
     env: 
-      - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }}
+      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
 
   - name: cloudsmith-rpm
     ids: 
@@ -110,7 +110,7 @@ publishers:
     dir: "{{ dir .ArtifactPath }}"
     cmd: cloudsmith push rpm convoy/convoy/any-distro/any-version {{ .ArtifactName }}
     env: 
-      - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }}
+      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
     
   - name: cloudsmith-docker
     ids: 
@@ -120,7 +120,7 @@ publishers:
      docker save {{ .ArtifactName }} -o conta.docker
      cloudsmith push docker convoy/convoy conta.docker
     env: 
-      - CLOUDSMITH_API_KEY= {{ .Env.CLOUDSMITH_API_KEY }} 
+      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }} 
 
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"

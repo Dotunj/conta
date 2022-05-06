@@ -75,7 +75,7 @@ brews:
 dockers: 
 - 
   image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
-  id: convoy-image
+  id: myimg
   goos: linux
   goarch: amd64
   dockerfile: build.Dockerfile
@@ -117,8 +117,11 @@ publishers:
   #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
     
   - name: cloudsmith-docker
+    ids: 
+    - myimg
+    dir: "{{ dir .ArtifactPath }}"
     cmd: |
-     docker save ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }} -o conta.docker
+     docker save {{ .ArtifactName }} -o conta.docker
      cloudsmith push docker convoy/convoy conta.docker
     env: 
       - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }} 

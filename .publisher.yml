@@ -82,7 +82,6 @@ dockers:
     - mybuild
   build_flag_templates:
   - --platform=linux/amd64
-  - --tag="docker.cloudsmith.io/convoy/convoy/dotunj/conta:{{.Tag}}
   - --label=org.opencontainers.image.title={{ .ProjectName }}
   - --label=org.opencontainers.image.description=A Cloud native webhook service
   - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}

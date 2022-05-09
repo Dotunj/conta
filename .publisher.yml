@@ -62,7 +62,7 @@ brews:
     tap:
       owner: dotunj
       name: homebrew-tools
-    url_template: https://dl.cloudsmith.io/public/convoy/convoy/raw/versions/{{.Version}}/{{.Tag }}/{{ .ArtifactName }}
+    url_template: https://dl.cloudsmith.io/public/convoy/convoy/raw/versions/{{.Version}}/{{ .ArtifactName }}
 
 dockers: 
 - image_templates: ["docker.cloudsmith.io/convoy/convoy/dotunj/conta:{{ .Tag }}"]

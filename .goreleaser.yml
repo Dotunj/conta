@@ -19,49 +19,47 @@ builds:
       - amd64
       - arm64
 
+  - id: libbuild
+    skip: true
+      
 # https://goreleaser.com/customization/archive/
 archives:
   - name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    id: mybuild-archive
+    builds:
+     - mybuild
 
-# https://goreleaser.com/customization/nfpm/
-nfpms:
-  - id: debrpm
-    license: MPL-2.0
-    maintainer: "frain-dev"
-    homepage: https://getconvoy.io/
-    description: A Cloud native webhook service
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    formats:
-      - rpm
-      - deb
+dockers: 
+- image_templates: ["docker.cloudsmith.io/convoy/convoy/dotunj/conta:{{ .Tag }}"]
+  goos: linux
+  goarch: amd64
+  dockerfile: build.Dockerfile
+  ids: 
+    - mybuild
+  build_flag_templates:
+  - --platform=linux/amd64
+  - --label=org.opencontainers.image.title={{ .ProjectName }}
+  - --label=org.opencontainers.image.description=A Cloud native webhook service
+  - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}
+  - --label=org.opencontainers.image.source=https://github.com/dotunj/{{ .ProjectName }}
+  - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
+  - --label=org.opencontainers.image.licenses=MPL-2.0
 
-  - id: apk
-    license: MPL-2.0
-    maintainer: "frain-dev"
-    homepage: https://getconvoy.io/
-    description: A Cloud native webhook service
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
-    formats:
-      - apk
-
-dockers:
-  - image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
-    goos: linux
-    goarch: amd64
-    dockerfile: build.Dockerfile
-    ids:
-      - mybuild
-    build_flag_templates:
-      - --platform=linux/amd64
-      - --label=org.opencontainers.image.title={{ .ProjectName }}
-      - --label=org.opencontainers.image.description=A Cloud native webhook service
-      - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}
-      - --label=org.opencontainers.image.source=https://github.com/dotunj/{{ .ProjectName }}
-      - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
-      - --label=org.opencontainers.image.licenses=MPL-2.0
+publishers:
+  - name: cloudsmith-raw
+    ids: 
+    - mybuild-archive
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
+    env: 
+     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
 
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"
+
+release:
+  ids:
+    - libbuild
 
 signs:
   - cmd: cosign

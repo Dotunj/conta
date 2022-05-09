@@ -49,14 +49,6 @@ nfpms:
     formats:
       - rpm
 
-# # https://goreleaser.com/customization/publishers/
-# publishers:
-#    - name: fury.io
-#      ids:
-#       - debrpm
-#      dir: "{{ dir .ArtifactPath }}" 
-#      cmd: curl -F package=@{{ .ArtifactName }} https://{{ .Env.FURY_TOKEN }}@push.fury.io/conta/
-
 # https://goreleaser.com/customization/homebrew/
 brews:
   - name: conta
@@ -73,8 +65,7 @@ brews:
     url_template: https://dl.cloudsmith.io/public/convoy/convoy/raw/versions/{{.Version}}/{{.Tag }}/{{ .ArtifactName }}
 
 dockers: 
-- id: myimg
-  image_templates: ["docker.cloudsmith.io/convoy/convoy/dotunj/conta:{{ .Tag }}"]
+- image_templates: ["docker.cloudsmith.io/convoy/convoy/dotunj/conta:{{ .Tag }}"]
   goos: linux
   goarch: amd64
   dockerfile: build.Dockerfile
@@ -90,29 +81,29 @@ dockers:
   - --label=org.opencontainers.image.licenses=MPL-2.0
 
 publishers:
-  # - name: cloudsmith-raw
-  #   ids: 
-  #   - mybuild-archive
-  #   dir: "{{ dir .ArtifactPath }}"
-  #   cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
-  #   env: 
-  #    - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+  - name: cloudsmith-raw
+    ids: 
+    - mybuild-archive
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push raw --version={{ .Version }} convoy/convoy {{ .ArtifactName }}
+    env: 
+     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
 
-  # - name: cloudsmith-deb
-  #   ids: 
-  #   - deb
-  #   dir: "{{ dir .ArtifactPath }}"
-  #   cmd: cloudsmith push deb convoy/convoy/any-distro/any-version {{ .ArtifactName }}
-  #   env: 
-  #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+  - name: cloudsmith-deb
+    ids: 
+    - deb
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push deb convoy/convoy/any-distro/any-version {{ .ArtifactName }}
+    env: 
+      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
 
-  # - name: cloudsmith-rpm
-  #   ids: 
-  #   - rpm
-  #   dir: "{{ dir .ArtifactPath }}"
-  #   cmd: cloudsmith push rpm convoy/convoy/any-distro/any-version {{ .ArtifactName }}
-  #   env: 
-  #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
+  - name: cloudsmith-rpm
+    ids: 
+    - rpm
+    dir: "{{ dir .ArtifactPath }}"
+    cmd: cloudsmith push rpm convoy/convoy/any-distro/any-version {{ .ArtifactName }}
+    env: 
+      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
     
 
 checksum:
@@ -122,26 +113,26 @@ release:
   ids:
     - libbuild
 
-# signs:
-#   - cmd: cosign
-#     env:
-#       - COSIGN_EXPERIMENTAL=1
-#     certificate: "${artifact}.pem"
-#     args:
-#       - sign-blob
-#       - "--output-certificate=${certificate}"
-#       - "--output-signature=${signature}"
-#       - "${artifact}"
-#     artifacts: checksum
-#     output: true
+signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    certificate: "${artifact}.pem"
+    args:
+      - sign-blob
+      - "--output-certificate=${certificate}"
+      - "--output-signature=${signature}"
+      - "${artifact}"
+    artifacts: checksum
+    output: true
 
-# docker_signs:
-#   - cmd: cosign
-#     env:
-#       - COSIGN_EXPERIMENTAL=1
-#     artifacts: images
-#     output: true
-#     args: 
-#       - sign
-#       - "--force"
-#       - "${artifact}"
+docker_signs:
+  - cmd: cosign
+    env:
+      - COSIGN_EXPERIMENTAL=1
+    artifacts: images
+    output: true
+    args: 
+      - sign
+      - "--force"
+      - "${artifact}"

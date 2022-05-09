@@ -113,26 +113,26 @@ release:
   ids:
     - libbuild
 
-signs:
-  - cmd: cosign
-    env:
-      - COSIGN_EXPERIMENTAL=1
-    certificate: "${artifact}.pem"
-    args:
-      - sign-blob
-      - "--output-certificate=${certificate}"
-      - "--output-signature=${signature}"
-      - "${artifact}"
-    artifacts: checksum
-    output: true
+# signs:
+#   - cmd: cosign
+#     env:
+#       - COSIGN_EXPERIMENTAL=1
+#     certificate: "${artifact}.pem"
+#     args:
+#       - sign-blob
+#       - "--output-certificate=${certificate}"
+#       - "--output-signature=${signature}"
+#       - "${artifact}"
+#     artifacts: checksum
+#     output: true
 
-docker_signs:
-  - cmd: cosign
-    env:
-      - COSIGN_EXPERIMENTAL=1
-    artifacts: images
-    output: true
-    args: 
-      - sign
-      - "--force"
-      - "${artifact}"
+# docker_signs:
+#   - cmd: cosign
+#     env:
+#       - COSIGN_EXPERIMENTAL=1
+#     artifacts: images
+#     output: true
+#     args: 
+#       - sign
+#       - "--force"
+#       - "${artifact}"

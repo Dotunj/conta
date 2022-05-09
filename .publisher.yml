@@ -73,17 +73,16 @@ brews:
     url_template: https://dl.cloudsmith.io/public/convoy/convoy/raw/versions/{{.Version}}/{{.Tag }}/{{ .ArtifactName }}
 
 dockers: 
-- image_templates: ["ghcr.io/dotunj/{{ .ProjectName }}:{{ .Tag }}"]
-  id: 
-   - myimg
+- id: myimg
+  image_templates: ["docker.cloudsmith.io/convoy/convoy:{{ .Tag }}"]
   goos: linux
   goarch: amd64
   dockerfile: build.Dockerfile
-  skip_push: true
   ids: 
     - mybuild
   build_flag_templates:
   - --platform=linux/amd64
+  - --tag="docker.cloudsmith.io/convoy/convoy:{{.Tag}}
   - --label=org.opencontainers.image.title={{ .ProjectName }}
   - --label=org.opencontainers.image.description=A Cloud native webhook service
   - --label=org.opencontainers.image.url=https://github.com/dotunj/{{ .ProjectName }}
@@ -116,15 +115,6 @@ publishers:
   #   env: 
   #     - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }}
     
-  - name: cloudsmith-docker
-    ids: 
-    - myimg
-    dir: "{{ dir .ArtifactPath }}"
-    cmd: |
-     docker save {{ .ArtifactName }} -o conta.docker
-     cloudsmith push docker convoy/convoy conta.docker
-    env: 
-      - CLOUDSMITH_API_KEY={{ .Env.CLOUDSMITH_API_KEY }} 
 
 checksum:
   name_template: "{{ .ProjectName}}_checksums.txt"

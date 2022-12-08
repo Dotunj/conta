@@ -27,3 +27,4 @@ jobs:
           environment: production
           sourcemaps: web/ui/dashboard/source-maps
           ignore_missing: true
+          set_commits: skip

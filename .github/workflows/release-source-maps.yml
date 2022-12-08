@@ -8,7 +8,7 @@ on:
         required: true
 
 jobs:
-   build_ui:
+   release_source_maps:
      name: Build UI
      runs-on: "ubuntu-latest"
      steps:
